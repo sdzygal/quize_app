@@ -24,7 +24,7 @@ continue_btn.onclick = () => {
     startTimeLine(0);
 }
 
-let timeValue = 15;
+// let timeValue = 15;
 let que_count = 0;
 let que_numb = 1;
 let userScore = 0;
@@ -49,7 +49,7 @@ restart_quiz.onclick = () => {
     clearInterval(counterLine);
     startTimer(timeValue);
     startTimerLine(widthValue);
-    timeText.textContent = "Time Left";
+    // timeText.textContent = "Time Left";
     next_btn.classList.remove("show");
 }
 quit_quiz.onclick = () => {
@@ -83,4 +83,72 @@ next_btn.onclick = () => {
 function showQuestions(index) {
     const que_text = document.querySelector(".que_text");
 
+
+    let que_tag = '<span>' + questions[index].numb + ". " + questions[index].question + '</span>';
+    let option_tag = '<div class="option"><span>' + question + '</span></div>' +
+        '<div class="option"><span>' + question[index].options[1] + '</span></div>' +
+        '<div class="option"><span>' + question[index].options[2] + '</span></div>' +
+        '<div class="option"><span>' + question[index].options[3] + '</span></div>';
+    que_text.innerHTML = que_tag;
+    option_list.innerHTML = option_tag;
+
+    const option = option_list.querySelectorAll(".option");
+
+    for (i = 0; i < option.length; i++) {
+        option[i].setAttribute("onclick", "optionSelected(this)");
+    }
+
+}
+
+let tickIconTag = '<div class="icon tick"<i class="fas fa-check"</i></div>';
+let crossIconTag = '<div class="icon cross"><i class="fas fa-times"></i></div>';
+
+function optionSelected(answer) {
+    clearInterval(counter);
+    clearInterval(counterLine);
+    let userAns = answer.textContent;
+    let correcAns = questions[que_count].answer;
+    const all0options = option_list.children.length;
+
+    if (userAns == correcAns) {
+        userScore += 1;
+        answer.classList.add("correct");
+        answer.insertAdjacentHTML("beforeend", tickIconTag);
+        console, log("Correct Answer");
+        console.log("Your correct answers = " + userScore);
+    } else {
+        answer.classList.add("incorrect");
+        answer.insertAdjacentHTML("beforeend", crossIconTag);
+        console.log("Wrong Answer");
+
+        for (i = 0; i < all0options; i++) {
+            if (option_list.children[i].textContent == correcAns) {
+                option_list.children[i].setAttribute("class", "option correct");
+                option_list.children[i].insertAdjacentHTML("beforeend", tickIconTag);
+                console.log("Auto selected correct answer.");
+            }
+        }
+    }
+    for (i = 0; i < all0options; i++) {
+        option_list.children[i].classList.add("disabled");
+    }
+    next_btn.classList.add("show");
+}
+
+function showResult() {
+    info_box.classList.remove("activeInfo");
+    quiz_box.classList.remove("activeQuiz");
+    result_box.classList.add("activeResult");
+    const scoreText = result_box.querySelector(".score_text");
+
+    if (userScore > 3) {
+        let scoreTag = '<span>and congrats! , You got <p>' + userScore + '</p> out of <p>' + questions.length + '</p></span>';
+        scoreText.innerHTML = scoreTag;
+    } else if (userScore > 1) {
+        let scoreTag = '<span>and nice , You got <p>' + userScore + '</p> out of <p>' + questions.length + '</p></span>';
+        scoreText.innerHTML = scoreTag;
+    } else {
+        let scoreTag = '<span>and sorry , You got only <p>' + userScore + '</p> out of <p>' + questions.length + '</p></span>';
+        scoreText.innerHTML = scoreTag;
+    }
 }
